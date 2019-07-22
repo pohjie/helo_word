@@ -5,12 +5,14 @@ import argparse
 from gec import filepath, word_tokenize, bpe, perturb, m2, spell
 
 
+# generic method to execute specific func
 def maybe_do(fp, func, inputs):
     if os.path.exists(fp):
         logging.info(f"skip this step as {fp} already exists")
     else:
         func(*inputs)
 
+# method for downloading train/test files
 def maybe_download(dir, cmd):
     if os.listdir(dir) != []:
         logging.info(f"skip this step as {dir} is NOT empty")
@@ -27,14 +29,21 @@ if __name__ == "__main__":
     parser.add_argument("--max_tokens", type=int, default=150,
                         help="Maximum number of tokens in a sample")
 
-    # 2. train bpe model
+    # 2. train bpe model (SentencePiece)
+    # do so before feeding this into seq2seq model -> avoid <unk> in most
+    # train and validation sets
     parser.add_argument("--vocab_size", type=int, default=32000,
                         help="vocabulary size")
 
     # 3. perturbation -> bpe-tokenize
+    # i.e. Section 4.1 Constructing Noising Scenarios
+    # collect edits that happen at least 4 times to prevent overfitting
     parser.add_argument("--min_cnt", type=int, default=4)
+    # probablity of applying human edits to a grammatically correct sentence
     parser.add_argument("--word_change_prob", type=float, default=.9)
+    # probability of applying errors associated with that token type
     parser.add_argument("--type_change_prob", type=float, default=.1)
+    # num of times noising approach applied to each dataset to approx balance data
     parser.add_argument("--n_epochs", type=int, nargs="+", default=[1, 12, 5],
                         help="list of n_epochs of gutenberg, tatoeba, and wiki103")
 
