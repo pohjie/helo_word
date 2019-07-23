@@ -43,6 +43,7 @@ def main(args):
     find_best(output_dir, ori_path, scorer_type)
 
 
+# finds the best f score and checkpoint that leads to this f score
 def find_best(output_dir, ori_path, scorer_type):
     if output_dir is None:
         return None, None
@@ -54,6 +55,7 @@ def find_best(output_dir, ori_path, scorer_type):
     return highest_fscore, highest_ckpt
 
 
+# evaluates the score of the corrected text
 def evaluate(scorer_type, ori_file, cor_file, gold_m2_file, report_path):
     if scorer_type == "errant":
         logging.info("[Evaluate] errant")
@@ -75,6 +77,8 @@ def evaluate(scorer_type, ori_file, cor_file, gold_m2_file, report_path):
         os.system(prompt)
 
 
+# runs the checkpoint. If certain files (correct, report, etc) do not exist,
+# these files will be created accordingly
 def run_ckpt(databin_path, ckpt, output_dir, scorer_type,
              gold_m2_file, ori_path, ori_bpe_path, gen_subset,
              remove_unk_edits, remove_error_type_lst,
