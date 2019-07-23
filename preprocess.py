@@ -115,6 +115,7 @@ if __name__ == "__main__":
     # maybe_download(fp.m2scorer, "wget https://www.comp.nus.edu.sg/~nlp/sw/m2scorer.tar.gz")
     # maybe_download(fp.errant, "git clone https://github.com/chrisjbryant/errant.git")
 
+    # STEP 1: Tokenize the original files using spaCy
     logging.info("STEP 1. Word-tokenize the original files and merge them")
     logging.info("STEP 1-1. gutenberg")
     fpaths = sorted(glob(f'{fp.gutenberg}/Gutenberg/txt/*.txt'))
@@ -131,10 +132,14 @@ if __name__ == "__main__":
     maybe_do(fp.WIKI103_TXT, word_tokenize.wiki103,
              (fpath, fp.WIKI103_TXT, args.max_tokens))
 
+    # SentencePiece model -> SentencePiece is a software that supports 
+    # languague-independent BPE
     logging.info("STEP 2. Train bpe model")
     maybe_do(fp.BPE_MODEL, bpe.train,
              (fp.GUTENBERG_TXT, fp.BPE_MODEL.replace(".model", ""), args.vocab_size, 1.0, 'bpe'))
 
+    # STEP 3: For 'Low Resource Track' -> split W&I+L Development Set
+    # into ratio of 3:1 train+test sets
     logging.info("STEP 3. Split wi.dev into wi.dev.3k and wi.dev.1k")
     fpaths = sorted(glob(f'{fp.wi_m2}/*.dev.gold.bea19.m2'))
     wi_dev_3k_m2 = f'{fp.wi_m2}/ABCN.dev.gold.bea19.3k.m2'
@@ -142,7 +147,11 @@ if __name__ == "__main__":
     maybe_do(wi_dev_3k_m2, m2.split_m2,
              (fpaths, wi_dev_3k_m2, wi_dev_1k_m2, 0.75))
 
+    # I'm not sure if this perturb is for comparison or
     logging.info("STEP 4. Perturb and make parallel files")
+    # Track 1: Restricted Track
+    # Track 3: Low Resource
+    # Track 0: (I believe it is for comparison on conll dataset)
     for track_no in ("1", "3", "0"):
         logging.info(f"Track {track_no}")
         logging.info("STEP 4-1. writing perturbation scenario")
@@ -213,6 +222,7 @@ if __name__ == "__main__":
     maybe_do(fp.CONLL2014_ORI, m2.m2_to_parallel,
              (sorted(glob(f'{fp.conll2014_m2}/official-2014.combined.m2')), fp.CONLL2014_ORI, fp.CONLL2014_COR, False, False))
 
+    # Correct spelling and casing errors
     logging.info("STEP 6. spell-check")
     logging.info("STEP 6-1. fce")
     maybe_do(fp.FCE_SP_ORI, spell.check, (fp.FCE_ORI, fp.FCE_SP_ORI))
