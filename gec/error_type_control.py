@@ -13,6 +13,8 @@ ERROR_TYPES = ['M:ADJ', 'M:ADV', 'M:CONJ', 'M:CONTR', 'M:DET', 'M:NOUN', 'M:NOUN
                'U:OTHER', 'U:PART', 'U:PREP', 'U:PRON', 'U:PUNCT', 'U:VERB', 'U:VERB:FORM', 'U:VERB:TENSE']
 
 
+# parse the report in order to get the scores
+# will be hard to understand w/o exposure to the actual report
 def parse(report):
     # get summary
     text = open(report, 'r').read()
