@@ -256,7 +256,8 @@ if __name__ == "__main__":
 
     logging.info("STEP 6-11. jfleg")
     maybe_do(fp.JFLEG_SP_ORI, spell.check, (fp.JFLEG_ORI, fp.JFLEG_SP_ORI))
-    #
+
+    # tokenize the texts which are already in byte pair encoding
     logging.info("STEP 7. bpe-tokenize")
     logging.info("STEP 7-1. fce")
     maybe_do(fp.FCE_TOK_ORI, bpe.bpe_tokenize, (fp.BPE_MODEL, fp.FCE_SP_ORI, fp.FCE_TOK_ORI))
