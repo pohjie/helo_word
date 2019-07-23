@@ -52,6 +52,7 @@ if __name__ == "__main__":
     fp = filepath.FilePath()
     fp.make_dirs()
 
+    # STEP 0: Download datasets
     logging.info("STEP 0. Download data")
     logging.info("STEP 0-1. Download Gutenberg Text")
     maybe_download(fp.gutenberg,
