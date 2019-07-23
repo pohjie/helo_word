@@ -1,6 +1,7 @@
 import sentencepiece as spm
 
 def train(inp, model_prefix, vocab_size, character_coverage, model_type):
+    # calling the code of SentencePiece similar to how fairseq is called
     train = f'--input={inp} --model_prefix={model_prefix} \
             --vocab_size={vocab_size} --character_coverage={character_coverage} \
             --model_type={model_type}'
@@ -19,6 +20,7 @@ def adjust_vocab(vocab_fpath):
     with open(vocab_fpath, 'w') as fout:
         fout.write("\n".join(adjusted))
 
+# tokenize byte pair encodings
 def bpe_tokenize(model, fin, fout):
     '''
     model: str. model fp
